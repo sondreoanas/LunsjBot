@@ -1,4 +1,5 @@
 const { App } = require('@slack/bolt');
+const lunsjComponent = require('./models/lunsj_component');
 
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
@@ -6,62 +7,21 @@ const app = new App({
 });
 
 let lunsj_time = Date();
-const lunsj_message = {
-	blocks: [
-		{
-			type: "section",
-			text: {
-				type: "mrkdwn",
-				text: "Når er du klar for lunsj? :clock1130:"
-			},
-			accessory: {
-				type: "static_select",
-				placeholder: {
-					type: "plain_text",
-					text: "Velg et tidspunkt",
-					emoji: true
-				},
-				options: [
-					{
-						text: {
-							type: "plain_text",
-							text: "Nå!",
-							emoji: true
-						},
-						value: "now"
-					},
-					{
-						text: {
-							type: "plain_text",
-							text: "Om 2 min",
-							emoji: true
-						},
-						value: "2min"
-					},
-					{
-						text: {
-							type: "plain_text",
-							text: "Om 5 min",
-							emoji: true
-						},
-						value: "5min"
-					}
-				]
-            },
-            action_id: "lunsj_select"
-		}
-	]
-};
+
 
 app.message('lunsj?', ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
-    say(lunsj_message);
+    say(lunsjComponent.message);
 });
   
 app.action('lunsj_select', ({ body, ack, say }) => {
     // Acknowledge the action
-    ack();
-    say(`<@${body.user.id}> clicked the button`);
+	ack();
+	let selected_option = body.actions[0].selected_option.value;
+	console.log(selected_option);
+	let selected_option_text = lunsjComponent.get_select(selected_option);
+	console.log(selected_option_text);
+    say(`<@${body.user.id}> er klar for lunsj ` + selected_option_text);
 });
 
 (async () => {
