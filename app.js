@@ -1,17 +1,35 @@
 const { App } = require('@slack/bolt');
-const lunsjComponent = require('./models/lunsj_component');
+const lunsjComponent = require('./models/component');
+const helper = require('./helper');
 
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET
 });
 
-let lunsj_time = Date();
-
-
 app.message('lunsj?', ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
     say(lunsjComponent.message);
+});
+
+app.command('/lunsj', ({command, ack, say}) => {
+	ack();
+	let text = command.text.split(' ');
+
+	if (text[0] == "ask") {
+		// TODO: ask whom for lunsj
+	} else if (text[0] == "set") {
+		// TODO: set time for lunsj
+	} else if (text[0] == 'get') {
+		if (text[1] == 'menu') {
+			helper.get_menu(text[2]).then(response => {
+				say(text[2] +  ': ' + response.header + ', ' + response.description);
+			});
+		}
+		// TODO: get time for lunsj and menu
+	} else if (text[0] == 'help') {
+		// TODO: set help for lunsj command
+	}
 });
   
 app.action('lunsj_select', ({ body, ack, say }) => {

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@slack/bolt": "^1.4.0"
+    "@slack/bolt": "^1.4.0",
+    "puppeteer": "^1.20.0"
   }
 }
