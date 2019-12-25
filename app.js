@@ -1,35 +1,41 @@
 const { App } = require('@slack/bolt');
 const lunsjComponent = require('./models/component');
 const helper = require('./helper');
+const slash_helper = require('./command');
+const Lunsj = require('./lunsj.js');
 
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET
 });
 
-app.message('lunsj?', ({ message, say }) => {
-    // say() sends a message to the channel where the event was triggered
-    say(lunsjComponent.message);
+const now = Date.now();
+const lunsj = new Lunsj(now);
+
+app.message('lunsj?', async ({ message, context }) => {
+	const users = await helper.get_users(app, context.botToken);
+	for (user of users) {
+		await app.client.chat.postMessage({
+			token: context.botToken,
+			channel: user,
+			blocks: lunsjComponent.message.blocks
+		});
+	}
 });
+
+
 
 app.command('/lunsj', ({command, ack, say}) => {
 	ack();
-	let text = command.text.split(' ');
+	let command_text = command.text.split(' ');
+	let init_command = command_text[0];
+	let command_rest = command_text.shift();
 
-	if (text[0] == "ask") {
-		// TODO: ask whom for lunsj
-	} else if (text[0] == "set") {
-		// TODO: set time for lunsj
-	} else if (text[0] == 'get') {
-		if (text[1] == 'menu') {
-			helper.get_menu(text[2]).then(response => {
-				say(text[2] +  ': ' + response.header + ', ' + response.description);
-			});
-		}
-		// TODO: get time for lunsj and menu
-	} else if (text[0] == 'help') {
-		// TODO: set help for lunsj command
-	}
+	if (init_command == "ask") slash_helper.ask(app, command, command_rest);
+	else if (init_command == "set") slash_helper.set(command_rest);
+	else if (init_command == 'get') slash_helper.get(command_rest);
+	else if (init_command == 'help') slash_helper.help(command_rest);
+	else slash_helper(command_text);
 });
   
 app.action('lunsj_select', ({ body, ack, say }) => {
@@ -44,12 +50,5 @@ app.action('lunsj_select', ({ body, ack, say }) => {
 
 (async () => {
     await app.start(4390);
-    // let ts = Date.now();
-
-    // let date_ob = new Date(ts);
-    // let date = date_ob.getDate();
-    // let month = date_ob.getMonth() + 1;
-    // let year = date_ob.getFullYear();
-    
     console.log('⚡️ Bolt app is running!');
 })();

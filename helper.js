@@ -37,6 +37,29 @@ async function get_menu(day) {
         default:
             return menus;
     }
+};
+
+async function get_users (app, token) {
+    const result = await app.client.users.list({
+		token: token
+    });
+    return result.members.filter(function (result) {
+        return (result.id != 'USLACKBOT' && !result.is_bot);
+    }).map(function (result) {
+        return result.id;
+    });
+};
+
+async function get_user (app, token, username) {
+    const result = await app.client.users.list({
+        token: token
+    });
+    return result.members.filter(function (result) {
+        return (result.username == username);
+    }).filter(function (result) {
+        return result.id;
+    });
 }
 
 module.exports.get_menu = get_menu;
+module.exports.get_users = get_users;
