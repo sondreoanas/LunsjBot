@@ -1,7 +1,7 @@
 const { App } = require('@slack/bolt');
 const lunsjComponent = require('./models/component');
-const helper = require('./helper');
-const slash_helper = require('./command');
+const helper = require('./helpers/helper');
+const slash_helper = require('./helpers/command');
 const Lunsj = require('./lunsj.js');
 
 const app = new App({
@@ -9,18 +9,23 @@ const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET
 });
 
-const now = Date.now();
-const lunsj = new Lunsj(now);
+const lunsj = new Lunsj();
 
 app.message('lunsj?', async ({ message, context }) => {
-	const users = await helper.get_users(app, context.botToken);
-	for (user of users) {
-		await app.client.chat.postMessage({
-			token: context.botToken,
-			channel: user,
-			blocks: lunsjComponent.message.blocks
-		});
-	}
+	console.log('lunsj?...');
+	//const users = await helper.get_users(app, context.botToken);
+
+	
+});
+
+app.message('snart lunsj', async ({ message, context }) => {
+	console.log('snart lunsj...');
+	//lunsj.schedualMessages(app, context.botToken);
+	await lunsj.schedualMessages(app, context.botToken, 'now');
+});
+
+app.message('delete lunsj', async ({ message, context }) => {
+	console.log('delete lunsj...');
 });
 
 
