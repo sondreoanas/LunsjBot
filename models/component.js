@@ -5,7 +5,7 @@ const options = [
 			"text": "Nå!",
 			"emoji": true
 		},
-		"value": "now"
+		"value": "0"
 	},
 	{
 		"text": {
@@ -13,7 +13,7 @@ const options = [
 			"text": "Om 2 min",
 			"emoji": true
 		},
-		"value": "2min"
+		"value": "2"
 	},
 	{
 		"text": {
@@ -21,7 +21,7 @@ const options = [
 			"text": "Om 5 min",
 			"emoji": true
 		},
-		"value": "5min"
+		"value": "5"
 	}
 ];
 

@@ -39,11 +39,16 @@ async function get_menu(day) {
     }
 };
 
-async function get_users (app, token) {
+async function get_users (app, token, username) {
     const result = await app.client.users.list({ token: token });
     if (result.ok) {
         return result.members.filter(function (result) {
-            return (result.id != 'USLACKBOT' && !result.is_bot);
+            if (username) {
+                return (result.username == username);
+            }
+            else {
+                return (result.id != 'USLACKBOT' && !result.is_bot);
+            }
         });//.map(function (result) {
         //     return result.id;
         // });
@@ -53,12 +58,12 @@ async function get_users (app, token) {
     }
 };
 
-async function get_user_channel_ids (app, token) {
-    const users = await get_users(app, token);
+async function get_user_channel_ids (app, token, username) {
+    const users = await get_users(app, token, username);
     const user_channel_ids = [];
 	for (user of users) {
 		try {
-			const id = await app.client.im.open({ token: context.botToken, user: user.id })
+			const id = await app.client.im.open({ token: token, user: user.id })
 			if (id.ok) {
 				user_channel_ids.push( id.channel.id );
 			} else {
@@ -71,17 +76,6 @@ async function get_user_channel_ids (app, token) {
 		}
     }
     return user_channel_ids;
-}
-
-async function get_user (app, token, username) {
-    const result = await app.client.users.list({
-        token: token
-    });
-    return result.members.filter(function (result) {
-        return (result.username == username);
-    }).filter(function (result) {
-        return result.id;
-    });
 }
 
 module.exports.get_menu = get_menu;

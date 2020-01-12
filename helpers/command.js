@@ -1,19 +1,8 @@
- async function ask (app, command) { 
-	// TODO: ask whom for lunsj
-    const users = [];
-    console.log('fetching users');
-    if (text.length > 1 && text[1] != 'all') {
-        users = await helper.get_user(app, command.token, text[1]);
+ async function ask (app, token, lunsj, command) {
+    if (command.trim() == 'all' || command == '') {
+        await lunsj.postMessages(app, token);
     } else {
-        users = await helper.get_users(app, command.token);
-    }
-    console.log(users);
-    for (user of users) {
-        await app.client.chat.postMessage({
-            token: command.token,
-            channel: user,
-            blocks: lunsjComponent.message.blocks
-        });
+        await lunsj.postMessage(app, token, command);
     }
 }
 

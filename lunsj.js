@@ -4,6 +4,13 @@ const lunsjComponent = require('./models/component');
 class Lunsj {
     constructor(time) {
         this.answers = [];
+
+        this.options = {
+            'now' : 0,
+            '2 min' : 2,
+            '5 min' : 5
+        };
+
         if (time) {
             this.time = time;
         } else {
@@ -25,7 +32,8 @@ class Lunsj {
                 }
 
                 // TODO: Add check for year
-                let max_date = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+                let max_day = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                let max_date = max_day.getDate();
                 let date = now.getDate() + added_days;
                 
                 if (date > max_date) {
@@ -56,24 +64,32 @@ class Lunsj {
         this.answers.push(answer);
     }
 
-    async schedualMessages(app, token, time = this.time) {
-        const users = await helper.get_users(app, token);
-        if (time == 'now') {
-            for (user of users) {
+    async postMessages(app, token, usernames = '') {
+        const users = await helper.get_users(app, token, usernames.trim());
+        for (user of users) {
+            try {
                 await app.client.chat.postMessage({
                     token: token,
                     channel: user,
                     blocks: lunsjComponent.message.blocks
                 });
             }
-        } else {
+            catch (error) {
+                console.error(error);
+            }
+        }
+    }
+
+    async schedualMessages(app, token, time = this.time) {
+        const users = await helper.get_users(app, token);
+        
+        for (user of users) {
             try {
-                // Call the chat.scheduleMessage method with a token
                 await app.client.chat.scheduleMessage({
-                  token: token,
-                  channel: message.channel.id,
-                  post_at: time,
-                  blocks: lunsjComponent.message.blocks
+                    token: token,
+                    channel: user,
+                    post_at: time,
+                    blocks: lunsjComponent.message.blocks
                 });
             }
             catch (error) {

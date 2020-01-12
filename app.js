@@ -11,33 +11,15 @@ const app = new App({
 
 const lunsj = new Lunsj();
 
-app.message('lunsj?', async ({ message, context }) => {
-	console.log('lunsj?...');
-	//const users = await helper.get_users(app, context.botToken);
-
-	
-});
-
-app.message('snart lunsj', async ({ message, context }) => {
-	console.log('snart lunsj...');
-	//lunsj.schedualMessages(app, context.botToken);
-	await lunsj.schedualMessages(app, context.botToken, 'now');
-});
-
-app.message('delete lunsj', async ({ message, context }) => {
-	console.log('delete lunsj...');
-});
-
-
-
-app.command('/lunsj', ({command, ack, say}) => {
+app.command('/lunsj', async ({ack, payload, context}) => {
 	ack();
-	let command_text = command.text.split(' ');
-	let init_command = command_text[0];
-	let command_rest = command_text.shift();
 
-	if (init_command == "ask") slash_helper.ask(app, command, command_rest);
-	else if (init_command == "set") slash_helper.set(command_rest);
+	let command_list = payload.text.split(' ');
+	const init_command = command_list.shift();
+	const command_rest = command_list.join(' ');
+
+	if (init_command == 'init' || init_command == 'ask') await slash_helper.ask(app, context.botToken, lunsj, command_rest);
+	else if (init_command == 'set') slash_helper.set(command_rest);
 	else if (init_command == 'get') slash_helper.get(command_rest);
 	else if (init_command == 'help') slash_helper.help(command_rest);
 	else slash_helper(command_text);
