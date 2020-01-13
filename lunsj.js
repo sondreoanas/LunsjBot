@@ -3,7 +3,7 @@ const lunsjComponent = require('./models/component');
 
 class Lunsj {
     constructor(time) {
-        this.answers = [];
+        this.answers = {};
 
         this.options = {
             'now' : 0,
@@ -50,18 +50,31 @@ class Lunsj {
     }
 
     calculateLunsjTime() {
-        if (this.answers.length > 0) {
-            let timeLeft = 0;
-            this.answers.forEach(answer => {
-                if (answer > timeLeft) timeLeft = answer;
-            });
-            return timeLeft;
+        const now = new Date();
+
+        let user = 0;
+        let time_left = 0;
+
+        for (const key of this.answers.keys) {
+
+            let cur_date = this.answers[key].date;
+            cur_date.setMinutes(cur_date.getMinutes() + this.answers[key].answer);
+
+            let cur_time_left = cur_date - now;
+            if (cur_time_left > time_left) {
+                time_left = cur_time_left;
+                user = key;
+            }
         }
-        else return 0;
+        return { 'timeLeft' : time_left, 'user' : user }
     }
 
-    addAnswer(answer) {
-        this.answers.push(answer);
+    addAnswer(user, answer) {
+        this.answers[user] = { 
+            'answer' : answer,
+            'date': new Date()
+        };
+        return this.calculateLunsjTime();
     }
 
     async postMessages(app, token, usernames = '') {

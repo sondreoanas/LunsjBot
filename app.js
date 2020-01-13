@@ -28,11 +28,14 @@ app.command('/lunsj', async ({ack, payload, context}) => {
 app.action('lunsj_select', ({ body, ack, say }) => {
     // Acknowledge the action
 	ack();
-	let selected_option = body.actions[0].selected_option.value;
-	console.log(selected_option);
-	let selected_option_text = lunsjComponent.get_select(selected_option);
-	console.log(selected_option_text);
-    say(`<@${body.user.id}> er klar for lunsj ` + selected_option_text);
+	const user = body.user.id;
+	const selected_option = body.actions[0].selected_option.value;
+	const remainingObj = lunsj.addAnswer(user, selected_option);
+	if (remainingObj.user > 0) {
+		say('Det er ' +  remainingObj.timeLeft + ` min igjen til lunsj, venter på <@${remainingObj.user}>`);
+	} else {
+		say('Det er ' + remainingObj.timeLeft + ' min igjen til lunsj!');
+	}
 });
 
 (async () => {
