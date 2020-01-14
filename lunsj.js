@@ -53,25 +53,27 @@ class Lunsj {
         const now = new Date();
 
         let user = 0;
-        let time_left = 0;
+        let ticks_left = 0;
 
-        for (const key of this.answers.keys) {
+        for (const key of Object.keys(this.answers)) {
 
             let cur_date = this.answers[key].date;
             cur_date.setMinutes(cur_date.getMinutes() + this.answers[key].answer);
 
             let cur_time_left = cur_date - now;
-            if (cur_time_left > time_left) {
-                time_left = cur_time_left;
+
+            if (cur_time_left > ticks_left) {
+                ticks_left = cur_time_left;
                 user = key;
             }
         }
-        return { 'timeLeft' : time_left, 'user' : user }
+        const time_left = new Date(ticks_left);
+        return { 'timeLeft' : time_left.getMinutes() + ':' + time_left.getSeconds() , 'user' : user }
     }
 
     addAnswer(user, answer) {
         this.answers[user] = { 
-            'answer' : answer,
+            'answer' : parseInt(answer),
             'date': new Date()
         };
         return this.calculateLunsjTime();
