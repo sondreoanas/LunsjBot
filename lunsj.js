@@ -52,12 +52,12 @@ class Lunsj {
     calculateLunsjTime() {
         const now = new Date();
 
-        let user = 0;
+        let user = '';
         let ticks_left = 0;
 
         for (const key of Object.keys(this.answers)) {
 
-            let cur_date = this.answers[key].date;
+            let cur_date = new Date(this.answers[key].date);
             cur_date.setMinutes(cur_date.getMinutes() + this.answers[key].answer);
 
             let cur_time_left = cur_date - now;

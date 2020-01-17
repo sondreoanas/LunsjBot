@@ -31,7 +31,7 @@ app.action('lunsj_select', ({ body, ack, say }) => {
 	const user = body.user.id;
 	const selected_option = body.actions[0].selected_option.value;
 	const remainingObj = lunsj.addAnswer(user, selected_option);
-	if (remainingObj.user > 0) {
+	if (remainingObj.user != '') {
 		say('Det er ' +  remainingObj.timeLeft + ` min igjen til lunsj, venter på <@${remainingObj.user}>`);
 	} else {
 		say('Det er ' + remainingObj.timeLeft + ' min igjen til lunsj!');
