@@ -81,12 +81,13 @@ class Lunsj {
 
     async postMessages(app, token, usernames = '') {
         const users = await helper.get_users(app, token, usernames.trim());
+        const lunsj_blocks = lunsjComponent.getLunsjMessage(this.options);
         for (user of users) {
             try {
                 await app.client.chat.postMessage({
                     token: token,
                     channel: user,
-                    blocks: lunsjComponent.message.blocks
+                    blocks: lunsj_blocks
                 });
             }
             catch (error) {

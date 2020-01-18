@@ -13,12 +13,12 @@ const lunsj = new Lunsj();
 
 app.command('/lunsj', async ({ack, payload, context}) => {
 	ack();
-
 	let command_list = payload.text.split(' ');
 	const init_command = command_list.shift();
 	const command_rest = command_list.join(' ');
 
 	if (init_command == 'init' || init_command == 'ask') await slash_helper.ask(app, context.botToken, lunsj, command_rest);
+	else if (init_command == 'settings') slash_helper.settings(app, context.botToken, payload.channel_id);
 	else if (init_command == 'set') slash_helper.set(command_rest);
 	else if (init_command == 'get') slash_helper.get(command_rest);
 	else if (init_command == 'help') slash_helper.help(command_rest);
@@ -36,6 +36,14 @@ app.action('lunsj_select', ({ body, ack, say }) => {
 	} else {
 		say('Det er ' + remainingObj.timeLeft + ' min igjen til lunsj!');
 	}
+});
+
+app.action('add_option', ({ body, ack, say }) => {
+	ack();
+});
+
+app.action('remove_option', ({ body, ack, say }) => {
+	ack();
 });
 
 (async () => {

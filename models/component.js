@@ -1,32 +1,5 @@
-const options = [
-	{
-		"text": {
-			"type": "plain_text",
-			"text": "Nå!",
-			"emoji": true
-		},
-		"value": "0"
-	},
-	{
-		"text": {
-			"type": "plain_text",
-			"text": "Om 2 min",
-			"emoji": true
-		},
-		"value": "2"
-	},
-	{
-		"text": {
-			"type": "plain_text",
-			"text": "Om 5 min",
-			"emoji": true
-		},
-		"value": "5"
-	}
-];
-
-const message = {
-	"blocks": [
+function get_message(options) {
+	return [
 		{
 			"type": "section",
 			"text": {
@@ -42,22 +15,24 @@ const message = {
 				},
 				"options": options,
 				"action_id": "lunsj_select"
-            }
+			}
 		}
-	]
+	];
 };
 
-function get_select(select) {
-	let result = '';
-	options.forEach(option => {
-		if (option.value == select) {
-			console.log(option);
-			result = option.text.text.toLowerCase();
-			return;
-		}
-	});
-	return result;
+function getLunsjMessage(options) {
+	let cur_options = []
+	for (const key of Object.keys(options)) {
+		cur_options.push({
+			"text": {
+				"type": "plain_text",
+				"text": key,
+				"emoji": true
+			},
+			"value": options[key].toString()
+		});
+	}
+	return get_message(cur_options);
 };
 
-module.exports.message = message;
-module.exports.get_select = get_select;
+module.exports.getLunsjMessage = getLunsjMessage;
