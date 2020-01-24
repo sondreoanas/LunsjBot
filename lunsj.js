@@ -79,6 +79,14 @@ class Lunsj {
         return this.calculateLunsjTime();
     }
 
+    addOption(optionMessage, optionValue) {
+        this.options[optionMessage] = optionValue;
+    }
+
+    removeOption(optionMessage) {
+        delete this.options[optionMessage];
+    }
+
     async postMessages(app, token, usernames = '') {
         const users = await helper.get_users(app, token, usernames.trim());
         const lunsj_blocks = lunsjComponent.getLunsjMessage(this.options);

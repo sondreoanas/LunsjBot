@@ -20,8 +20,8 @@ function get_message(options) {
 	];
 };
 
-function getLunsjMessage(options) {
-	let cur_options = []
+function getOptions(options) {
+	let cur_options = [];
 	for (const key of Object.keys(options)) {
 		cur_options.push({
 			"text": {
@@ -31,8 +31,13 @@ function getLunsjMessage(options) {
 			},
 			"value": options[key].toString()
 		});
-	}
-	return get_message(cur_options);
+	};
+	return cur_options;
 };
 
+function getLunsjMessage(options) {
+	return get_message(getOptions(options));
+};
+
+module.exports.getOptions = getOptions;
 module.exports.getLunsjMessage = getLunsjMessage;

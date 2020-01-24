@@ -1,46 +1,29 @@
-const settingsBlocks = [
-    {
-        "type": "divider"
-    },
-    {
-        "type": "section",
-        "text": {
-            "type": "plain_text",
-            "text": "Change options for lunsjBot",
-            "emoji": true
-        }
-    },
-    {
-        "type": "divider"
-    },
-    {
-        "type": "actions",
-        "elements": [
-            {
-                "type": "button",
-                "text": {
-                    "type": "plain_text",
-                    "text": "Add option",
-                    "emoji": true
-                },
-                "action_id": "add_option"
+const lunsjComponent = require('./component');
+
+function getRemoveOptionsBlocks(options) {
+    return [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "Pick an item from the dropdown list"
             },
-            {
-                "type": "button",
-                "text": {
+            "accessory": {
+                "type": "static_select",
+                "placeholder": {
                     "type": "plain_text",
-                    "text": "Remove option",
+                    "text": "Select an item",
                     "emoji": true
                 },
-                "action_id": "remove_option"
+                "options": options,
+                "action_id": "remove_option_act"
             }
-        ]
-    }
-];
+        }
+    ]
+};
 
-const addOptionBlocks = [];
-const removeOptionBlocks = []; 
+function removeOptionBlocks(options) {
+    return getRemoveOptionsBlocks(lunsjComponent.getOptions(options));
+}
 
-module.exports.settingsBlocks = settingsBlocks;
-module.exports.addOptionBlocks = addOptionBlocks;
 module.exports.removeOptionBlocks = removeOptionBlocks;
