@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "@slack/bolt": "^1.4.0",
+    "bolt-oauth": "^1.0.1",
+    "dotenv": "^8.2.0",
     "puppeteer": "^1.20.0"
   }
 }

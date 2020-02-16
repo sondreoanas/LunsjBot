@@ -38,5 +38,23 @@ function get_welcome_message() {
 	]
 }
 
+function get_helping_hand() {
+	return [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Hi @Sondre! :wave: \n\n" +
+					"I see you have started using *Lunsj bot*\n" + 
+					"Need more options to express yourself?\n\n" + 
+					"Add new options with:\n" + 
+					"*/lunsj settings add (displayed text) (amount of minutes)*\n" + 
+					"or remove existing ones with\n" + 
+					"*/lunjs settings remove*"
+			}
+		}
+	]
+}
+
 module.exports.get_error_message = get_error_message;
 module.exports.get_message = get_message;

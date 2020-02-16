@@ -1,20 +1,30 @@
-const { App } = require('@slack/bolt');
+require('dotenv').config();
 
-const settingsComponent = require('./models/settings');
-
-const helper = require('./helpers/helper');
 const slash_helper = require('./helpers/command');
+const oauth_helper = require('./helpers/oauth');
 const Lunsj = require('./lunsj.js');
 
+const { App } = require('@slack/bolt');
+const Auth = require('bolt-oauth');
+
 const app = new App({
-    token: process.env.SLACK_BOT_TOKEN,
-    signingSecret: process.env.SLACK_SIGNING_SECRET
+    authorize: oauth_helper.authorizeFn,
+    receiver: Auth({
+        clientId: process.env.SLACK_CLIENT_ID,
+        clientSecret: process.env.SLACK_CLIENT_SECRET,
+        signingSecret: process.env.SLACK_SIGNING_SECRET,
+        redirectUrl: process.env.SLACK_REDIRECT_URL,
+        stateCheck: oauth_helper.oauthStateCheck,
+        onSuccess: oauth_helper.oauthSuccess,
+        onError: oauth_helper.oauthError
+    })
 });
 
 const lunsj = new Lunsj();
 
 app.command('/lunsj', async ({ack, payload, context}) => {
 	ack();
+	console.log('Called /lunsj');
 	let command_list = payload.text.split(' ');
 	const init_command = command_list.shift();
 	const command_rest = command_list.join(' ');
@@ -45,6 +55,6 @@ app.action('remove_option_act', ({ body, ack, say }) => {
 });
 
 (async () => {
-    await app.start(4390);
+	await app.start(4300);
     console.log('⚡️ Bolt app is running!');
 })();
