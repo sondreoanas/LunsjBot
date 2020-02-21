@@ -2,12 +2,16 @@
   "name": "slack-lunsj-bot",
   "version": "1.0.0",
   "description": "Slack bot",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "config" : { 
+    "port" : "8080" 
+  },
+  "author": "Sondre Oanæs",
+  "license": "MIT",
   "dependencies": {
     "@slack/bolt": "^1.4.0",
     "bolt-oauth": "^1.0.1",
