@@ -56,6 +56,7 @@ typings/
 
 # dotenv environment variables file
 .env
+lunsjbotdb-firebase-adminsdk-pjlus-faa936b432.json
 
 # next.js build output
 .next
