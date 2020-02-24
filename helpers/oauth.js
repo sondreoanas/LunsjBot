@@ -27,9 +27,9 @@ const oauthSuccess = ({ res, oAuthResult }) => {
     res.redirect('http://www.example.com');
 };
 
-const oauthError = (error) => {
+const oauthErro = (error) => {
     // do something about that error to let the user know
-    console.log('oauthError');
+
     console.log(error);
 };
 
@@ -40,6 +40,7 @@ const oauthStateCheck = (oAuthState) => {
 
 const  authorizeFn = (async ({ teamId, enterpriseId, userId, conversationId }) => {
     let token = {};
+
     // check db for token
     await db.collection('OAuth').get()
         .then((snapshot) => {
@@ -49,7 +50,12 @@ const  authorizeFn = (async ({ teamId, enterpriseId, userId, conversationId }) =
                 }
             });
         });
-    return token;
+
+    if (token.userToken || token.botToken) {
+        return token;
+    } else {
+        throw new Error('No matching authorizations');
+    }
 });
 
 module.exports.oauthSuccess = oauthSuccess;

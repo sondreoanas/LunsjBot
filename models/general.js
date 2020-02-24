@@ -30,7 +30,7 @@ function get_welcome_message() {
 				"type": "mrkdwn",
 				"text": "Hi @Sondre! :wave: \n\n" + 
 					"This is *Lunsj* :flag-no: (Lunch) bot\n" + 
-					" It's an app that asks all your coworkers when they are ready for lunch and keeps track of the time\n\n" + 
+					" It's an app that asks all your coworkers when they are ready for lunch and keeps track of the time.\n\n" + 
 					"Ask all your coworkers when they are ready for lunch by typing \n" + 
 					"*/lunsj ask all* or */lunsj ask @username*"
 			}
@@ -56,5 +56,30 @@ function get_helping_hand() {
 	]
 }
 
+function get_help_message() {
+	return [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Lunsj bot usage :knife_fork_plate:"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Ask when people are ready for lunch:\n\n" +
+				"`/lunsj ask all` to ask everyone\n" + 
+				"`/lunsj ask @username` to ask a specific person\n\n" +
+				"Not satisfied wifth the availible options?\n\n" +
+				"`/lunsj settings add (option name) (option value in min)` to add a new value or\n" +
+				"`/lunsj settings remove` to remove a value"
+			}
+		}
+	]
+}
+
 module.exports.get_error_message = get_error_message;
 module.exports.get_message = get_message;
+module.exports.get_help_message = get_help_message;

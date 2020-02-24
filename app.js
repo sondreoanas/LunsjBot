@@ -55,6 +55,6 @@ app.action('remove_option_act', ({ body, ack, say }) => {
 });
 
 (async () => {
-	await app.start(4300);
+	await app.start(8080);
     console.log('⚡️ Bolt app is running!');
 })();

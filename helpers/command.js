@@ -65,7 +65,7 @@ async function help(app, token, channel) {
         await app.client.chat.postMessage({
             token: token,
             channel: channel,
-            blocks: generalComponent.get_message('Usage of /lunsj:\nask ( all | username )\nsettings add (text) (value)\nsettings remove')
+            blocks: generalComponent.get_help_message()
         });
     }
     catch (error) {
