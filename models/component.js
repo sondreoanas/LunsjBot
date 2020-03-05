@@ -1,10 +1,13 @@
-function get_message(options) {
+function get_message(options, username) {
+	let text = "";
+	if (username) text = `<@${username}> wants to know when you are ready for lunch? :clock1130:`
+	else text = "When are you ready for lunch? :clock1130:"
 	return [
 		{
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "Når er du klar for lunsj? :clock1130:"
+				"text": text
 			},
 			"accessory": {
 				"type": "static_select",
@@ -35,8 +38,8 @@ function getOptions(options) {
 	return cur_options;
 };
 
-function getLunsjMessage(options) {
-	return get_message(getOptions(options));
+function getLunsjMessage(options, username) {
+	return get_message(getOptions(options), username);
 };
 
 module.exports.getOptions = getOptions;

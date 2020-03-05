@@ -1,15 +1,40 @@
- const settingsComponent = require('../models/settings');
- const generalComponent = require('../models/general');
- 
- async function ask (app, token, lunsj, command) {
-    if (command.trim() == 'all' || command == '') {
-        await lunsj.postMessages(app, token);
+const settingsComponent = require('../models/settings');
+const generalComponent = require('../models/general');
+
+async function command (app, payload, context) {
+    
+    let command_list = payload.text.split(' ');
+    const init_command = command_list.shift();
+    const command_rest = command_list.join(' ');
+
+    let messages = [];
+    if (init_command == 'init' || init_command == 'ask') {
+        messages = await ask(context.botToken, command_rest, payload.user_id);
+    } else if (init_command == 'settings') {
+        messages = settings(app, context.botToken, payload.channel_id, lunsj, admin, command_rest);
     } else {
-        await lunsj.postMessage(app, token, command);
+        messages = help(payload.channel_id);
+    }
+
+    for (const message of messages) {
+        await app.client.chat.postMessage({
+            token: context.botToken,
+            channel: message.channel,
+            blocks: message.blocks
+        });
+    }
+}
+ 
+ async function ask (lunsj, command, currentUser) {
+    if (command.trim() == 'all' || command == '') {
+        return await lunsj.getMessages(token, currentUser);
+    } else {
+        return await lunsj.getMessages(token, currentUser, command);
     }
 }
 
-async function settings (app, token, channel, lunsj, command) {
+//TODO: cleanup
+async function settings (app, token, channel, lunsj, admin, command) {
     try {
         let postMessage = '';
 
@@ -24,7 +49,7 @@ async function settings (app, token, channel, lunsj, command) {
                 const value = parseInt(command_rest[2].trim());
 
                 if (!isNaN(value)) {
-                    lunsj.addOption(text, value);
+                    lunsj.addOption(admin, text, value);
                     postMessage = generalComponent.get_message('Added value ' + text);
                 } else {
                     postMessage = error_message;
@@ -47,32 +72,12 @@ async function settings (app, token, channel, lunsj, command) {
     }
 }
 
-function get(command) {
-    if (command[1] == 'menu') {
-        helper.get_menu(text[2]).then(response => {
-            say(text[2] +  ': ' + response.header + ' ' + response.description);
-        });
-    }
-    else if (command[1] == 'time') {
-        
-    }
-    //else throw "command not recognized"
-    // TODO: get time for lunsj and menu
+
+async function help(channel) {
+    return [{
+        channel: channel,
+        blocks: generalComponent.getHelpMessage()
+    }];
 }
 
-async function help(app, token, channel) {
-    try {
-        await app.client.chat.postMessage({
-            token: token,
-            channel: channel,
-            blocks: generalComponent.get_help_message()
-        });
-    }
-    catch (error) {
-        console.error(error);
-    }
-}
-
-module.exports.ask = ask;
-module.exports.settings = settings;
-module.exports.help = help;
+module.exports.command = command;
